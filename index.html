@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="https://cdn0.iconfinder.com/data/icons/kameleon-free-pack-rounded/110/Chat-2-128.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" media="screen" title="no title" charset="utf-8">
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+  <title>Twitter Chat</title>
+
+
+  <!-- Codigo CSS Style -->
+  <style>
+  .login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    }
+    #errorMsg{
+      margin: 1%;
+    }
+    .btn {
+    margin: 3%;
+    border-radius: 50%;
+    }
+    #facebook {
+      background-color: #2962ff;
+    }
+    #google {
+      background-color: #d50000;
+    }
+    </style>
+  </head>
+
+  
+  <!--  Codigo HTML-->
+<body>
+  <div class='login'>
+    <h1 class='subtitle is-2'>&nbsp;&nbsp;Twitter Chat</h1>
+    <a class="waves-effect waves-light btn" id="twitter">
+      <span class="icon"><i class="fa fa-twitter"></i></span>&nbsp;twitter
+    </a>
+    <a class="waves-effect waves-light btn" id="facebook">
+      <span class="icon"><i class="fa fa-facebook"></i></span>&nbsp;facebook
+    </a>
+    <a class="waves-effect waves-light btn" id="google">
+      <span class="icon"><i class="fa fa-google"></i></span>&nbsp;google
+    </a>
+  </div>
+  <!-- Modal Structure -->
+  <div id="errorModal" class="modal">
+    <div class="modal-content">
+      <h4>Atencion!</h4>
+      <p>Ud no puede hacer eso</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+
+  <!--  Codigo JScript-->
+  <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+  <script type="text/javascript" >
+  const ref = new Firebase("https://chat-app8210.firebaseio.com/");
+  $('#errorMsg').hide()
+  $(".btn").click(function(){
+    const site = this.id
+    ref.authWithOAuthPopup(this.id, function(error, authData) {
+      if (error) handlesError()
+      else handlesSuccess(authData, site)
+    })
+  })
+  // Funcion en caso de error
+  function handlesError(){
+     $('#errorModal').openModal();
+  }
+  // Funcion en caso de exito
+  function handlesSuccess(authData, site){
+    let {displayName, profileImageURL, username } = authData[site]
+    username ? username : username=''
+    const auth = {displayName, profileImageURL,username }
+    localStorage.setItem("auth", JSON.stringify(auth))
+    window.location.replace("app.html");
+  }
+  </script>
